@@ -1,0 +1,40 @@
+# ============================
+# JARVIS Git Ignore
+# ============================
+
+# Secrets
+**/secrets.h
+.env
+.env.*
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# React / Node
+node_modules/
+dist/
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# IDE
+.vscode/
+.idea/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local/archive data
+archive/test and debug/record_JARVIS.csv

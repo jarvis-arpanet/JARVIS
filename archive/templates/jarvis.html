@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>jarvis home automation system, V8</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- Add your site or application content here -->
+
+<div class="container-fluid">
+
+<!-- top row -->
+	<div class="row">
+        <div class="col-sm-4">
+            <h3>Door, Hallway and Loft</h3>
+            	<div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='hallway_on'>hallway lights on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='hallway_off'>Off</button>
+          		</div>
+          		<p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='bulkhead_on'>bulkhead lights on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='bulkhead_off'>Off</button>
+          		</div>  
+                <p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='internal_on'>internal on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='internal_off'>Off</button>
+          		</div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-warning btn-sm" id='loft_fan_on'>loft fan on</button>
+                <button type="button" class="btn btn-default btn-sm" id='loft_fan_off'>Off</button>
+              </div>                 
+                <p></p>                
+                <table class="table table-condensed">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Temperature</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Hallway Temperature' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Humidity</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Hallway Humidty' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>%</td>
+                      </tr>
+                      <tr>
+                        <td>Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Hallway Light Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>Loft Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Loft Light Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>                      
+                   </tbody>
+                 </table>                  
+    	</div>
+            
+		<div class="col-sm-4">
+        	<h3>Bathroom</h3>
+            	<div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='bathroom_light_on'>lights on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='bathroom_light_off'>off</button>
+          		</div>
+          		<p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='bathroom_fan_on'>fan on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='bathroom_fan_off'>off</button>
+          		</div>
+                <p></p>
+                <table class="table table-condensed">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Temperature</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Bathroom Temperature Reading' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Humidity</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Bathroom Humidty Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>%</td>
+                      </tr>
+                      <tr>
+                        <td>Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Bathroom Light Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>
+                   </tbody>
+                 </table>                
+		</div>
+    
+		<div class="col-sm-4">
+        	<h3>Hackerspace</h3>
+            	<div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='hackerspace_desk_on'>desk on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='hackerspace_desk_off'>off</button>
+          		</div>
+          		<p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='hackerspace_lights_on'>lights on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='hackerspace_lights_off'>off</button>
+          		</div>
+                <p></p>
+                <table class="table table-condensed">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Temperature</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Hackerspace Temperature Reading' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Humidity</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Hackerspace Humidity Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>%</td>
+                      </tr>
+                      <tr>
+                        <td>Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Hackerspace Light Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>
+                   </tbody>
+                 </table>                  
+		</div>        
+	</div>
+    
+<!-- middle row -->	
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>Bedroom</h3>
+            	<div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='bedroom_lamp_on'>lamp on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='bedroom_lamp_off'>off</button>
+          		</div>
+          		<p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='bedroom_desk_on'>desk on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='bedroom_desk_off'>off</button>
+          		</div>
+                <p></p> 
+                <table class="table table-condensed">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Temperature</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Bedroom Temperature Reading' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Humidity</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Bedroom Humidity Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>%</td>
+                      </tr>
+                      <tr>
+                        <td>Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Bedroom Light Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>
+                   </tbody>
+                 </table>                   
+    	</div>
+            
+		<div class="col-sm-4">
+        	<h3>Living Room</h3>
+          		<p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='tv_on'>tv on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='tv_off'>tv off</button>
+            		<button type="button" class="btn btn-warning btn-sm" id='living_room_lamp_on'>lamp on</button>
+					<button type="button" class="btn btn-default btn-sm" id='living_room_lamp_off'>lamp off</button>
+				</div>
+          		<p></p>
+          		<div class="btn-group">
+            		<button type="button" class="btn btn-warning btn-sm" id='living_room_chairlamp_on'>chair lamp on</button>
+					<button type="button" class="btn btn-default btn-sm" id='living_room_chairlamp_off'>chair lamp off</button>
+                </div>
+                <p></p>
+                <table class="table table-condensed">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Temperature</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Living Room Temperature' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Humidity</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Living Room Humidity' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>%</td>
+                      </tr>
+                      <tr>
+                        <td>Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Living Room Light' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>
+                   </tbody>
+                 </table>                
+		</div>
+    
+		<div class="col-sm-4">
+        	<h3>Kitchen</h3>
+            	<div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='kitchen_lights_on'>Kitchen on</button>
+					<button type="button" class="btn btn-default btn-sm" id='kitchen_lights_off'>off</button>
+				</div>
+                <p></p>
+                <div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='kitchen_underlights_on'>Under light on</button>
+					<button type="button" class="btn btn-default btn-sm" id='kitchen_underlights_off'>off</button>
+                </div>
+                <p></p>                       	
+                <table class="table table-condensed">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Temperature</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Kitchen Temperature Reading' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Humidity</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Kitchen Humidity Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>%</td>
+                      </tr>
+                      <tr>
+                        <td>Light</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Kitchen Light Reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td></td>
+                      </tr>
+                   </tbody>
+                 </table>                    
+		</div>
+	</div>
+
+<!-- top row -->    
+	<div class="row">
+        <div class="col-sm-4">
+            <h3>Water</h3>
+                <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Hot water</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Hot water reading' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">°C</th>
+                      </tr>
+                      <tr>
+                        <td>Cold water</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Cold water reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>°C</td>
+                      </tr>
+                      <tr>
+                        <td>Day element</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Day water element reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>°C</td>
+                      </tr>
+                      <tr>
+                        <td>Night element</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Night water element reading' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>°C</td>
+                      </tr>
+                   </tbody>
+                 </table>                    
+    	</div>
+            
+		<div class="col-sm-4">
+        	<h3>Power</h3>
+                <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th style="font-weight:normal">Power 1</th>
+                        <th style="font-weight:normal">{% for item, reading in result.iteritems() %} {% if 'Power on CT1' in item %} {{reading}} {% endif %} {% endfor %}</th>
+                        <th style="font-weight:normal">kW</th>
+                      </tr>
+                      <tr>
+                        <td>Power 2</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Power on CT2' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>kW</td>
+                      </tr>
+                      <tr>
+                        <td>Power 3</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Power on CT3' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>kW</td>
+                      </tr>
+                      <tr>
+                        <td>Power 4</td>
+                        <td>{% for item, reading in result.iteritems() %} {% if 'Power on CT4' in item %} {{reading}} {% endif %} {% endfor %}</td>
+                        <td>kW</td>
+                      </tr>
+                   </tbody>
+                 </table>
+		</div>
+    
+		<div class="col-sm-4">
+        	<h3>Other</h3>
+            	<div class="btn-group" style>
+            		<button type="button" class="btn btn-warning btn-sm" id='alexa_speaker_on'>alexa on</button>
+            		<button type="button" class="btn btn-default btn-sm" id='alexa_speaker_off'>alexa off</button>
+          		</div>            
+		</div>    
+    
+	</div>  
+</div>
+<!-- end --> 
+
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+
+<!-- Door -->
+
+<!-- Hallway -->
+<script>
+	$(document).ready(function() {
+		$('#bulkhead_on').click(function() {
+			$.post('/bulkhead_light_on');
+		});		
+		$('#bulkhead_off').click(function() {
+			$.post('/bulkhead_light_off');
+		});
+
+		$('#hallway_on').click(function() {
+			$.post('/hallway_light_on');
+		});		
+		$('#hallway_off').click(function() {
+			$.post('/hallway_light_off');
+		});
+
+		$('#internal_on').click(function() {
+			$.post('/internal_light_on');
+		});		
+		$('#internal_off').click(function() {
+			$.post('/internal_light_off');
+		});		
+	
+	});
+</script>
+
+<!-- Bathroom -->
+<script>
+	$(document).ready(function() {
+		$('#bathroom_light_on').click(function() {
+		$.post('/bathroom_light_on');
+		});		
+		$('#bathroom_light_off').click(function() {
+		$.post('/bathroom_light_off');
+		});
+		
+		$('#bathroom_fan_on').click(function() {
+		$.post('/bathroom_fan_on');
+		});		
+		$('#bathroom_fan_off').click(function() {
+		$.post('/bathroom_fan_off');
+		});		
+	});		
+</script>
+
+<!-- Hackerspace -->
+<script>
+	$(document).ready(function() {
+		$('#hackerspace_desk_on').click(function() {
+		$.post('/hackerspace_desk_on');
+		});		
+		$('#hackerspace_desk_off').click(function() {
+		$.post('/hackerspace_desk_off');
+		});
+		
+		$('#hackerspace_lights_on').click(function() {
+		$.post('/hackerspace_lights_on');
+		});		
+		$('#hackerspace_lights_off').click(function() {
+		$.post('/hackerspace_lights_off');
+		});		
+	});		
+</script>
+
+<!-- Loft -->
+<script>
+  $(document).ready(function() {
+    $('#loft_fan_on').click(function() {
+    $.post('/loft_fan_on');
+    });   
+    $('#loft_fan_off').click(function() {
+    $.post('/loft_fan_off');
+    });   
+  });   
+</script>
+
+<!-- Bedroom -->
+<script>
+	$(document).ready(function() {
+		$('#bedroom_lamp_on').click(function() {
+		$.post('/bedroom_lamp_on');
+		});		
+		$('#bedroom_lamp_off').click(function() {
+		$.post('/bedroom_lamp_off');
+		});	
+		
+		$('#bedroom_desk_on').click(function() {
+		$.post('/bedroom_desk_on');
+		});		
+		$('#bedroom_desk_off').click(function() {
+		$.post('/bedroom_desk_off');
+		});	
+	});		
+</script>
+
+<!-- Living Room -->
+<script>
+	$(document).ready(function() {
+		$('#alexa_speaker_on').click(function() {
+			$.post('/alexa_speaker_on');
+		});
+		$('#alexa_speaker_off').click(function() {
+			$.post('/alexa_speaker_off');
+		});
+
+		$('#tv_on').click(function() {
+			$.post('/tv_on');
+		});
+		$('#tv_off').click(function() {
+			$.post('/tv_off');
+		});
+		
+		$('#living_room_lamp_on').click(function() {
+			$.post('/living_room_lamp_on');
+		});
+		$('#living_room_lamp_off').click(function() {
+			$.post('/living_room_lamp_off');
+		});
+
+		$('#living_room_chairlamp_on').click(function() {
+			$.post('/living_room_chairlamp_on');
+		});
+		$('#living_room_chairlamp_off').click(function() {
+			$.post('/living_room_chairlamp_off');
+		});
+
+		$('#pc_peripherals_on').click(function() {
+			$.post('/pc_peripherals_on');
+		});
+		$('#pc_peripherals_off').click(function() {
+			$.post('/pc_peripherals_off');
+		});
+	});
+</script>
+
+<!-- Kitchen -->
+<script>
+	$(document).ready(function() {
+		$('#kitchen_lights_on').click(function() {
+			$.post('/kitchen_lights_on');
+		});
+		$('#kitchen_lights_off').click(function() {
+			$.post('/kitchen_lights_off');
+			});
+	});
+	$(document).ready(function() {
+		$('#kitchen_underlights_on').click(function() {
+			$.post('/kitchen_underlights_on');
+		});
+		$('#kitchen_underlights_off').click(function() {
+			$.post('/kitchen_underlights_off');
+			});
+	});
+</script>
+
+<!-- Water -->
+
+<!-- Power -->
+
+<!-- Debug -->
+<script>
+	$(document).ready(function() {
+		$('#test_on').click(function() {
+			$.post('/test_switch_on');
+		});
+		$('#test_off').click(function() {
+			$.post('/test_switch_off');
+			});
+
+		$('#led_on').click(function() {
+			$.post('/led/1');
+		});
+		$('#led_off').click(function() {
+			$.post('/led/0');
+			});
+	});
+</script>

@@ -1,0 +1,77 @@
+<div class="container-fluid">
+
+<!-- top row -->
+	<div class="row">
+        <div class="col-sm-4" style="border:solid thin">
+            <h3>Door, Hallway and Loft</h3>     
+    	</div>
+            
+		<div class="col-sm-4" style="background-color:pink;">
+        	<h3>Bathroom</h3>
+		</div>
+    
+		<div class="col-sm-4">
+        	<h3>Hackerspace</h3>
+		</div>        
+	</div>
+    
+<!-- middle row -->	
+    <div class="row">
+        <div class="col-sm-4" style="border:solid thin">
+            <h3>Bedroom</h3>     
+    	</div>
+            
+		<div class="col-sm-4" style="background-color:pink;">
+        	<h3>Living Room</h3>
+		</div>
+    
+		<div class="col-sm-4">
+        	<h3>Kitchen</h3>
+		</div>      
+	</div>
+
+<!-- top row -->    
+	<div class="row">
+        <div class="col-sm-4" style="border:solid thin">
+            <h3>Water</h3>     
+    	</div>
+            
+		<div class="col-sm-4" style="background-color:pink;">
+        	<h3>Power</h3>
+		</div>
+    
+		<div class="col-sm-4">
+        	<h3>Other</h3>
+		</div>    
+    
+	</div> 
+</div>     
+<!-- end --> 
+     
+<!--
+<div class="col-sm-4">
+    <h3>Power</h3> 
+    <p>
+    Power 1 {% for item, reading in result.iteritems() %} {% if 'Power on CT1' in item %} {{reading}} {% endif %} {% endfor %}<br />
+    Power 2 {% for item, reading in result.iteritems() %} {% if 'Power on CT2' in item %} {{reading}} {% endif %} {% endfor %}<br />
+    Power 3 {% for item, reading in result.iteritems() %} {% if 'Power on CT3' in item %} {{reading}} {% endif %} {% endfor %}<br />
+    Power 4 {% for item, reading in result.iteritems() %} {% if 'Power on CT4' in item %} {{reading}} {% endif %} {% endfor %}
+    </p>
+</div>
+
+
+	<div class="col-sm-4">
+		<h3>Debug</h3>
+        <p>
+            <button type='button' class='btn btn-primary btn-sm' id='led_on'>LED ON</button>
+            <button type='button' class='btn btn-secondary btn-sm' id='led_off'>LED OFF</button>
+        </p>
+        <p>
+            <button type='button' class='btn btn-primary btn-sm' id='test_on'>test on</button>
+            <button type='button' class='btn btn-secondary btn-sm' id='test_off'>test off</button>
+        </p>  
+		Temperature {% for item, reading in result.iteritems() %} {% if 'Bathroom Temperature' in item %} {{reading}} {% endif %} {% endfor %}degC<br />
+		Humidity {% for item, reading in result.iteritems() %} {% if 'Bathroom Humidity' in item %} {{reading}} {% endif %} {% endfor %}%
+		</p>
+	</div>  
+-->

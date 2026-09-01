@@ -1,0 +1,49 @@
+sudo python JARVIS_monitor.py
+
+sudo python JARVIS/test\ and\ debug/light.py
+
+sudo python JARVIS/test\ and\ debug/JARVIS_bathroom_scan.py
+sudo python JARVIS/test\ and\ debug/JARVIS_energy.py
+sudo python JARVIS/test\ and\ debug/JARVIS_kitchen_scan.py
+sudo python JARVIS/test\ and\ debug/JARVIS_online.py
+sudo python JARVIS/test\ and\ debug/JARVIS_water.py
+sudo python JARVIS/test\ and\ debug/JARVIS_energy_water.py
+
+wakeonlan 50:E5:49:D1:8A:7C
+
+ps -fA | grep python
+sudo kill 1714
+
+sudo systemctl start redis
+sudo systemctl status redis
+
+sudo python web_app.py &
+
+
+
+ps -fA | grep python
+python
+sudo kill -9 25927
+python
+sudo killall python
+python
+sudo nano /etc/redis/redis.conf
+redis
+sudo systemctl status redis
+
+
+sudo systemctl restart redis
+
+
+
+192.168.1.71
+192.168.1.67
+192.168.1.225
+192.168.1.254
+192.168.1.210
+192.168.1.76
+192.168.1.80
+192.168.1.65
+192.168.1.235
+192.168.1.66
+

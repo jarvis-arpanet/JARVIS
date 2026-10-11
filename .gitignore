@@ -38,3 +38,8 @@ Thumbs.db
 
 # Local/archive data
 archive/test and debug/record_JARVIS.csv
+
+# JARVIS runtime database
+data/*.db
+data/*.db-wal
+data/*.db-shm

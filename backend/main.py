@@ -522,52 +522,35 @@ def get_device_history_from_db(
 # Poll one Pico
 # ============================================================
 
-async def poll_device(
-    client,
-    name,
-    url
-):
-
+async def poll_device(client, name, url):
     try:
-
-        response = await client.get(
-            url,
-            timeout=5.0
-        )
-
+        response = await client.get(url, timeout=5.0)
         response.raise_for_status()
 
         data = response.json()
-
-
-        # Ensure the device is stored using the configured
-        # JARVIS node name.
-        data["device"] = name
         data["online"] = True
 
+        latest_devices[name] = data
 
         save_reading(data)
-
 
         print(
             f"[OK] {name}: "
             f"{data.get('temperature_c')} C, "
             f"{data.get('humidity_pct')} %, "
-            f"RSSI "
-            f"{data.get('wifi_rssi')} dBm"
+            f"RSSI {data.get('wifi_rssi')} dBm"
         )
 
-
     except Exception as error:
+        latest_devices[name] = {
+            "device": name,
+            "online": False,
+            "error": str(error),
+        }
 
         mark_device_offline(name)
 
-
-        print(
-            f"[ERROR] {name}: "
-            f"{error}"
-        )
-
+        print(f"[ERROR] {name}: {error}")
 
 # ============================================================
 # Poll every Pico

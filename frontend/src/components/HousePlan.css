@@ -1,0 +1,240 @@
+.house-layout {
+  display: grid;
+  gap: 24px;
+}
+
+.floor-panel {
+  padding: 20px;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.section-heading__eyebrow,
+.room-card__eyebrow {
+  margin: 0 0 3px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.section-heading__meta {
+  color: #667085;
+  font-size: 13px;
+}
+
+.ground-floor,
+.first-floor {
+  display: grid;
+  gap: 10px;
+}
+
+.ground-floor {
+  grid-template-columns: 1.15fr 1fr 0.95fr;
+  grid-template-rows: 170px 170px;
+  grid-template-areas:
+    "rear kitchen dining"
+    "rear front garage";
+}
+
+.rear-sitting { grid-area: rear; }
+.kitchen { grid-area: kitchen; }
+.dining { grid-area: dining; }
+.front-room { grid-area: front; }
+.garage { grid-area: garage; }
+
+.first-floor {
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-rows: 170px 170px;
+  grid-template-areas:
+    "arthur bedroom"
+    "bathroom main";
+}
+
+.arthurs-room { grid-area: arthur; }
+.bedroom-two { grid-area: bedroom; }
+.bathroom { grid-area: bathroom; }
+.main-bedroom { grid-area: main; }
+
+.external-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.room-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e4e7ec;
+  border-radius: 10px;
+  background: #fcfcfd;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.room-card:hover {
+  transform: translateY(-1px);
+  border-color: #d0d5dd;
+  box-shadow: 0 4px 10px rgba(16, 24, 40, 0.06);
+}
+
+.room-card--online {
+  background: #ffffff;
+}
+
+.room-card--offline {
+  background: #fffafa;
+}
+
+.room-card--external {
+  min-height: 150px;
+}
+
+.room-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.room-card h3 {
+  margin: 0;
+  color: #101828;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.room-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid #e4e7ec;
+  background: #ffffff;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.room-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #98a2b3;
+}
+
+.room-status--online {
+  border-color: #abefc6;
+  background: #ecfdf3;
+  color: #067647;
+}
+
+.room-status--online .room-status__dot {
+  background: #17b26a;
+}
+
+.room-status--offline {
+  border-color: #fecdca;
+  background: #fef3f2;
+  color: #b42318;
+}
+
+.room-status--offline .room-status__dot {
+  background: #f04438;
+}
+
+.room-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 18px 0 12px;
+}
+
+.metric-label {
+  display: block;
+  margin-bottom: 4px;
+  color: #667085;
+  font-size: 12px;
+}
+
+.room-card__metrics strong {
+  color: #101828;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.room-card__metrics small {
+  margin-left: 2px;
+  color: #667085;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.room-card__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 11px;
+  border-top: 1px solid #eaecf0;
+  color: #667085;
+  font-size: 11px;
+}
+
+.room-card__empty-state {
+  margin-top: 16px;
+  color: #98a2b3;
+  font-size: 13px;
+}
+
+@media (min-width: 1100px) {
+  .house-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .floor-panel--external {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .ground-floor,
+  .first-floor {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .room-card {
+    min-height: 145px;
+  }
+
+  .external-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .room-card__footer {
+    flex-wrap: wrap;
+  }
+}

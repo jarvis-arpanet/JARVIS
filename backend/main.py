@@ -528,9 +528,9 @@ async def poll_device(client, name, url):
         response.raise_for_status()
 
         data = response.json()
-        data["online"] = True
 
-        latest_devices[name] = data
+        data["device"] = name
+        data["online"] = True
 
         save_reading(data)
 
@@ -542,15 +542,12 @@ async def poll_device(client, name, url):
         )
 
     except Exception as error:
-        latest_devices[name] = {
-            "device": name,
-            "online": False,
-            "error": str(error),
-        }
-
         mark_device_offline(name)
 
-        print(f"[ERROR] {name}: {error}")
+        print(
+            f"[ERROR] {name}: "
+            f"{error}"
+        )
 
 # ============================================================
 # Poll every Pico

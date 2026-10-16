@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import HousePlan from "./components/HousePlan";
+import RoomHistoryModal from "./components/RoomHistoryModal";
 import "./App.css";
 
 function average(values) {
@@ -12,6 +13,7 @@ function App() {
   const [devices, setDevices] = useState({});
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   async function loadDevices() {
     try {
@@ -116,7 +118,20 @@ function App() {
           </div>
         </section>
 
-        <HousePlan devices={devices} />
+        <HousePlan
+          devices={devices}
+          onRoomClick={(id, name) => {
+            setSelectedRoom({
+              id,
+              name,
+            });
+          }}
+        />
+
+        <RoomHistoryModal
+          room={selectedRoom}
+          onClose={() => setSelectedRoom(null)}
+        />
       </main>
     </div>
   );

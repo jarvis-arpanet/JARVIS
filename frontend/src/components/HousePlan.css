@@ -42,56 +42,79 @@
 }
 
 /* ============================================================
-   Ground floor
+   Floor layouts
    ============================================================ */
 
-.ground-floor {
+.ground-floor,
+.first-floor {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-areas:
-    "main-room kitchen front-room";
   gap: 10px;
 }
 
+/* Ground floor
+   Main Room occupies the large left-hand position.
+   Garage is now Gym.
+*/
+
+.ground-floor {
+  grid-template-columns: 1.15fr 1fr 0.95fr;
+  grid-template-rows: 170px 170px;
+
+  grid-template-areas:
+    "main kitchen dining"
+    "main front gym";
+}
+
 .main-room {
-  grid-area: main-room;
+  grid-area: main;
 }
 
 .kitchen {
   grid-area: kitchen;
 }
 
-.front-room {
-  grid-area: front-room;
+.dining {
+  grid-area: dining;
 }
 
-/* ============================================================
-   First floor
-   ============================================================ */
+.front-room {
+  grid-area: front;
+}
+
+.gym {
+  grid-area: gym;
+}
+
+/* First floor
+   Bedroom 2 is now Lily's Room.
+*/
 
 .first-floor {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr 1.15fr;
+  grid-template-rows: 170px 170px;
+
   grid-template-areas:
-    "arthurs-room lilys-room main-bedroom";
-  gap: 10px;
+    "arthur lily"
+    "bathroom main-bedroom";
 }
 
 .arthurs-room {
-  grid-area: arthurs-room;
+  grid-area: arthur;
 }
 
 .lilys-room {
-  grid-area: lilys-room;
+  grid-area: lily;
+}
+
+.bathroom {
+  grid-area: bathroom;
 }
 
 .main-bedroom {
   grid-area: main-bedroom;
 }
 
-/* ============================================================
-   External / other rooms
-   ============================================================ */
+/* External */
 
 .external-grid {
   display: grid;
@@ -106,6 +129,7 @@
 .room-card {
   min-width: 0;
   min-height: 170px;
+
   padding: 16px;
 
   border: 1px solid #e4e7ec;
@@ -120,13 +144,27 @@
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
-    transform 160ms ease;
+    transform 160ms ease,
+    background 160ms ease;
 }
 
-.room-card:hover {
-  transform: translateY(-1px);
-  border-color: #d0d5dd;
-  box-shadow: 0 4px 10px rgba(16, 24, 40, 0.06);
+/* ============================================================
+   Clickable room cards
+   ============================================================ */
+
+.room-card--clickable {
+  cursor: pointer;
+}
+
+.room-card--clickable:hover {
+  transform: translateY(-2px);
+  border-color: #98a2b3;
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.08);
+}
+
+.room-card--clickable:focus-visible {
+  outline: 2px solid #6941c6;
+  outline-offset: 2px;
 }
 
 /* ============================================================
@@ -192,9 +230,13 @@
 .room-status__dot {
   width: 7px;
   height: 7px;
+
   border-radius: 50%;
+
   background: #98a2b3;
 }
+
+/* Online */
 
 .room-status--online {
   border-color: #abefc6;
@@ -206,6 +248,8 @@
   background: #17b26a;
 }
 
+/* Offline */
+
 .room-status--offline {
   border-color: #fecdca;
   background: #fef3f2;
@@ -215,6 +259,8 @@
 .room-status--offline .room-status__dot {
   background: #f04438;
 }
+
+/* No sensor */
 
 .room-status--empty {
   border-color: #e4e7ec;
@@ -233,12 +279,15 @@
 .room-card__metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 18px;
+
   margin: 18px 0 12px;
 }
 
 .metric-label {
   display: block;
+
   margin-bottom: 4px;
 
   color: #667085;
@@ -271,6 +320,7 @@
 .room-card__footer {
   display: flex;
   justify-content: space-between;
+
   gap: 12px;
 
   padding-top: 11px;
@@ -316,16 +366,24 @@
   .ground-floor,
   .first-floor {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
     grid-template-areas: none;
   }
 
   .main-room,
   .kitchen,
+  .dining,
   .front-room,
+  .gym,
   .arthurs-room,
   .lilys-room,
+  .bathroom,
   .main-bedroom {
     grid-area: auto;
+  }
+
+  .external-grid {
+    grid-template-columns: 1fr;
   }
 }
 

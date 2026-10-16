@@ -28,6 +28,95 @@ PICO_NODES = {
     "lilys_room": "http://192.168.68.129/status",
 }
 
+# ============================================================
+# Sensor calibration
+#
+# Raw readings remain untouched in SQLite.
+# Calibration is applied only when readings are returned
+# through the API.
+#
+# corrected = raw + offset
+# ============================================================
+
+SENSOR_CALIBRATION = {
+    "arthurs_room": {
+        "temperature": -0.4,
+        "humidity": 2.6,
+    },
+
+    "bar": {
+        "temperature": 0.0,
+        "humidity": -1.2,
+    },
+
+    "front_room": {
+        "temperature": 0.8,
+        "humidity": 0.0,
+    },
+
+    "gym": {
+        "temperature": 0.8,
+        "humidity": -2.7,
+    },
+
+    "kitchen": {
+        "temperature": 0.2,
+        "humidity": -0.5,
+    },
+
+    "main_room": {
+        "temperature": -1.8,
+        "humidity": 6.1,
+    },
+
+    # Leave these uncalibrated for now:
+    #
+    # lilys_room
+    # main_bedroom
+}
+
+
+def apply_calibration(
+    device,
+    temperature,
+    humidity
+):
+    calibration = SENSOR_CALIBRATION.get(device)
+
+    if not calibration:
+        return temperature, humidity, False
+
+    corrected_temperature = temperature
+    corrected_humidity = humidity
+
+    if temperature is not None:
+        corrected_temperature = round(
+            temperature
+            + calibration.get("temperature", 0.0),
+            1
+        )
+
+    if humidity is not None:
+        corrected_humidity = (
+            humidity
+            + calibration.get("humidity", 0.0)
+        )
+
+        corrected_humidity = max(
+            0.0,
+            min(100.0, corrected_humidity)
+        )
+
+        corrected_humidity = round(
+            corrected_humidity,
+            1
+        )
+
+    return (
+        corrected_temperature,
+        corrected_humidity,
+        True,
+    )
 
 # ============================================================
 # Paths
@@ -432,6 +521,19 @@ def get_latest_devices_from_db():
 
     for row in rows:
 
+        raw_temperature = row["temperature_c"]
+        raw_humidity = row["humidity_pct"]
+
+        (
+            temperature,
+            humidity,
+            calibrated,
+        ) = apply_calibration(
+            row["device"],
+            raw_temperature,
+            raw_humidity,
+        )
+
         devices[row["device"]] = {
 
             "device":
@@ -441,10 +543,19 @@ def get_latest_devices_from_db():
                 row["updated_at"],
 
             "temperature_c":
-                row["temperature_c"],
+                temperature,
 
             "humidity_pct":
-                row["humidity_pct"],
+                humidity,
+
+            "raw_temperature_c":
+                raw_temperature,
+
+            "raw_humidity_pct":
+                raw_humidity,
+
+            "calibrated":
+                calibrated,
 
             "sensor_ok":
                 bool(
@@ -511,12 +622,53 @@ def get_device_history_from_db(
             ),
         ).fetchall()
 
+    history = []
 
-    return [
-        dict(row)
-        for row in rows
-    ]
+    for row in rows:
 
+        raw_temperature = row["temperature_c"]
+        raw_humidity = row["humidity_pct"]
+
+        (
+            temperature,
+            humidity,
+            calibrated,
+        ) = apply_calibration(
+            device,
+            raw_temperature,
+            raw_humidity,
+        )
+
+        history.append({
+            "collected_at":
+                row["collected_at"],
+
+            "temperature_c":
+                temperature,
+
+            "humidity_pct":
+                humidity,
+
+            "raw_temperature_c":
+                raw_temperature,
+
+            "raw_humidity_pct":
+                raw_humidity,
+
+            "calibrated":
+                calibrated,
+
+            "sensor_ok":
+                bool(row["sensor_ok"]),
+
+            "wifi_rssi":
+                row["wifi_rssi"],
+
+            "uptime_s":
+                row["uptime_s"],
+        })
+
+    return history
 
 # ============================================================
 # Poll one Pico

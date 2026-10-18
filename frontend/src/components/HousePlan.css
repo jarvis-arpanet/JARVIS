@@ -41,80 +41,41 @@
   font-size: 13px;
 }
 
-/* ============================================================
-   Floor layouts
-   ============================================================ */
-
 .ground-floor,
 .first-floor {
   display: grid;
   gap: 10px;
 }
 
-/* Ground floor
-   Main Room occupies the large left-hand position.
-   Garage is now Gym.
-*/
-
 .ground-floor {
-  grid-template-columns: 1.15fr 1fr 0.95fr;
-  grid-template-rows: 170px 170px;
-
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows:
+    minmax(190px, auto)
+    minmax(190px, auto);
   grid-template-areas:
-    "main kitchen dining"
-    "main front gym";
+    "main kitchen"
+    "front gym";
 }
 
-.main-room {
-  grid-area: main;
-}
-
-.kitchen {
-  grid-area: kitchen;
-}
-
-.dining {
-  grid-area: dining;
-}
-
-.front-room {
-  grid-area: front;
-}
-
-.gym {
-  grid-area: gym;
-}
-
-/* First floor
-   Bedroom 2 is now Lily's Room.
-*/
+.main-room { grid-area: main; }
+.kitchen { grid-area: kitchen; }
+.front-room { grid-area: front; }
+.gym { grid-area: gym; }
 
 .first-floor {
   grid-template-columns: 1fr 1.15fr;
-  grid-template-rows: 170px 170px;
-
+  grid-template-rows:
+    minmax(190px, auto)
+    minmax(190px, auto);
   grid-template-areas:
     "arthur lily"
     "bathroom main-bedroom";
 }
 
-.arthurs-room {
-  grid-area: arthur;
-}
-
-.lilys-room {
-  grid-area: lily;
-}
-
-.bathroom {
-  grid-area: bathroom;
-}
-
-.main-bedroom {
-  grid-area: main-bedroom;
-}
-
-/* External */
+.arthurs-room { grid-area: arthur; }
+.lilys-room { grid-area: lily; }
+.bathroom { grid-area: bathroom; }
+.main-bedroom { grid-area: main-bedroom; }
 
 .external-grid {
   display: grid;
@@ -122,35 +83,23 @@
   gap: 10px;
 }
 
-/* ============================================================
-   Room card
-   ============================================================ */
-
 .room-card {
   min-width: 0;
-  min-height: 170px;
-
+  min-height: 190px;
   padding: 16px;
-
   border: 1px solid #e4e7ec;
   border-radius: 10px;
-
   background: #fcfcfd;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
+  overflow: hidden;
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
     transform 160ms ease,
     background 160ms ease;
 }
-
-/* ============================================================
-   Clickable room cards
-   ============================================================ */
 
 .room-card--clickable {
   cursor: pointer;
@@ -167,35 +116,21 @@
   outline-offset: 2px;
 }
 
-/* ============================================================
-   Room states
-   ============================================================ */
-
-.room-card--online {
-  background: #ffffff;
-}
-
-.room-card--offline {
-  background: #fffafa;
-}
-
-.room-card--empty {
-  background: #fcfcfd;
-}
-
-.room-card--external {
-  min-height: 150px;
-}
-
-/* ============================================================
-   Room header
-   ============================================================ */
+.room-card--online { background: #ffffff; }
+.room-card--offline { background: #fffafa; }
+.room-card--empty { background: #fcfcfd; }
+.room-card--external { min-height: 190px; }
 
 .room-card__top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
+  min-width: 0;
+}
+
+.room-card__top > div {
+  min-width: 0;
 }
 
 .room-card h3 {
@@ -203,26 +138,19 @@
   color: #101828;
   font-size: 15px;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
-
-/* ============================================================
-   Status pill
-   ============================================================ */
 
 .room-status {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   flex: 0 0 auto;
-
   padding: 3px 8px;
-
   border-radius: 999px;
   border: 1px solid #e4e7ec;
-
   background: #ffffff;
   color: #667085;
-
   font-size: 12px;
   font-weight: 500;
 }
@@ -230,13 +158,9 @@
 .room-status__dot {
   width: 7px;
   height: 7px;
-
   border-radius: 50%;
-
   background: #98a2b3;
 }
-
-/* Online */
 
 .room-status--online {
   border-color: #abefc6;
@@ -244,11 +168,7 @@
   color: #067647;
 }
 
-.room-status--online .room-status__dot {
-  background: #17b26a;
-}
-
-/* Offline */
+.room-status--online .room-status__dot { background: #17b26a; }
 
 .room-status--offline {
   border-color: #fecdca;
@@ -256,11 +176,7 @@
   color: #b42318;
 }
 
-.room-status--offline .room-status__dot {
-  background: #f04438;
-}
-
-/* No sensor */
+.room-status--offline .room-status__dot { background: #f04438; }
 
 .room-status--empty {
   border-color: #e4e7ec;
@@ -268,85 +184,60 @@
   color: #667085;
 }
 
-.room-status--empty .room-status__dot {
-  background: #98a2b3;
-}
-
-/* ============================================================
-   Temperature / humidity
-   ============================================================ */
+.room-status--empty .room-status__dot { background: #98a2b3; }
 
 .room-card__metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 18px;
-
-  margin: 18px 0 12px;
+  gap: 12px;
+  margin: 14px 0 10px;
 }
 
 .metric-label {
   display: block;
-
   margin-bottom: 4px;
-
   color: #667085;
-
   font-size: 12px;
 }
 
 .room-card__metrics strong {
   color: #101828;
-
   font-size: 24px;
   font-weight: 600;
-
   letter-spacing: -0.02em;
 }
 
 .room-card__metrics small {
   margin-left: 2px;
-
   color: #667085;
-
   font-size: 13px;
   font-weight: 500;
 }
 
-/* ============================================================
-   Room footer
-   ============================================================ */
-
 .room-card__footer {
   display: flex;
   justify-content: space-between;
-
-  gap: 12px;
-
+  align-items: flex-start;
+  gap: 6px 12px;
   padding-top: 11px;
-
   border-top: 1px solid #eaecf0;
-
   color: #667085;
-
   font-size: 11px;
+  line-height: 1.35;
+  flex-wrap: wrap;
 }
 
-/* ============================================================
-   Empty room state
-   ============================================================ */
+.room-card__footer span {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 
 .room-card__empty-state {
   margin-top: 16px;
-
   color: #98a2b3;
-
   font-size: 13px;
 }
-
-/* ============================================================
-   Desktop layout
-   ============================================================ */
 
 @media (min-width: 1100px) {
   .house-layout {
@@ -358,10 +249,6 @@
   }
 }
 
-/* ============================================================
-   Tablet
-   ============================================================ */
-
 @media (max-width: 900px) {
   .ground-floor,
   .first-floor {
@@ -372,7 +259,6 @@
 
   .main-room,
   .kitchen,
-  .dining,
   .front-room,
   .gym,
   .arthurs-room,
@@ -381,15 +267,7 @@
   .main-bedroom {
     grid-area: auto;
   }
-
-  .external-grid {
-    grid-template-columns: 1fr;
-  }
 }
-
-/* ============================================================
-   Mobile
-   ============================================================ */
 
 @media (max-width: 720px) {
   .ground-floor,
@@ -399,14 +277,10 @@
   }
 
   .room-card {
-    min-height: 145px;
+    min-height: 175px;
   }
 
   .external-grid {
     grid-template-columns: 1fr;
-  }
-
-  .room-card__footer {
-    flex-wrap: wrap;
   }
 }

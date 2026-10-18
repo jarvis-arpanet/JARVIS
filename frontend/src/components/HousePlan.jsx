@@ -48,7 +48,6 @@ function Room({
           <p className="room-card__eyebrow">
             {external ? "External" : "Room"}
           </p>
-
           <h3>{name}</h3>
         </div>
 
@@ -63,22 +62,14 @@ function Room({
           ].join(" ")}
         >
           <span className="room-status__dot" />
-
-          {monitored
-            ? online
-              ? "Online"
-              : "Offline"
-            : "No sensor"}
+          {monitored ? (online ? "Online" : "Offline") : "No sensor"}
         </span>
       </div>
 
       {monitored ? (
         <div className="room-card__metrics">
           <div>
-            <span className="metric-label">
-              Temperature
-            </span>
-
+            <span className="metric-label">Temperature</span>
             <strong>
               {device.temperature_c ?? "—"}
               <small>°C</small>
@@ -86,10 +77,7 @@ function Room({
           </div>
 
           <div>
-            <span className="metric-label">
-              Humidity
-            </span>
-
+            <span className="metric-label">Humidity</span>
             <strong>
               {device.humidity_pct ?? "—"}
               <small>%</small>
@@ -104,38 +92,24 @@ function Room({
 
       {monitored && (
         <div className="room-card__footer">
-          <span>
-            Wi-Fi {device.wifi_rssi ?? "—"} dBm
-          </span>
-
-          <span>
-            Uptime {device.uptime_s ?? "—"} s
-          </span>
+          <span>Wi-Fi {device.wifi_rssi ?? "—"} dBm</span>
+          <span>Uptime {device.uptime_s ?? "—"} s</span>
         </div>
       )}
     </article>
   );
 }
 
-export default function HousePlan({
-  devices = {},
-  onRoomClick,
-}) {
+export default function HousePlan({ devices = {}, onRoomClick }) {
   return (
     <div className="house-layout">
       <section className="floor-panel">
         <div className="section-heading">
           <div>
-            <p className="section-heading__eyebrow">
-              House
-            </p>
-
+            <p className="section-heading__eyebrow">House</p>
             <h2>Ground floor</h2>
           </div>
-
-          <span className="section-heading__meta">
-            5 spaces
-          </span>
+          <span className="section-heading__meta">4 spaces</span>
         </div>
 
         <div className="ground-floor">
@@ -153,11 +127,6 @@ export default function HousePlan({
             device={devices.kitchen}
             onSelect={onRoomClick}
             className="kitchen"
-          />
-
-          <Room
-            name="Dining Room"
-            className="dining"
           />
 
           <Room
@@ -181,16 +150,10 @@ export default function HousePlan({
       <section className="floor-panel">
         <div className="section-heading">
           <div>
-            <p className="section-heading__eyebrow">
-              House
-            </p>
-
+            <p className="section-heading__eyebrow">House</p>
             <h2>First floor</h2>
           </div>
-
-          <span className="section-heading__meta">
-            4 spaces
-          </span>
+          <span className="section-heading__meta">4 spaces</span>
         </div>
 
         <div className="first-floor">
@@ -210,10 +173,7 @@ export default function HousePlan({
             className="lilys-room"
           />
 
-          <Room
-            name="Bathroom"
-            className="bathroom"
-          />
+          <Room name="Bathroom" className="bathroom" />
 
           <Room
             name="Main Bedroom"
@@ -228,16 +188,10 @@ export default function HousePlan({
       <section className="floor-panel floor-panel--external">
         <div className="section-heading">
           <div>
-            <p className="section-heading__eyebrow">
-              Garden
-            </p>
-
+            <p className="section-heading__eyebrow">Garden</p>
             <h2>External rooms</h2>
           </div>
-
-          <span className="section-heading__meta">
-            1 space
-          </span>
+          <span className="section-heading__meta">2 spaces</span>
         </div>
 
         <div className="external-grid">
@@ -248,6 +202,8 @@ export default function HousePlan({
             onSelect={onRoomClick}
             external
           />
+
+          <Room name="Diner" external />
         </div>
       </section>
     </div>

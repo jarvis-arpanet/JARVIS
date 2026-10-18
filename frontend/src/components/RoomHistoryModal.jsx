@@ -16,7 +16,7 @@ const RANGE_OPTIONS = {
   "6h": 360,
   "24h": 1440,
   "3d": 4320,
-  "7d": 5000,
+  "7d": 10080,
 };
 
 function formatTime(value) {
@@ -30,10 +30,7 @@ function formatTime(value) {
   });
 }
 
-export default function RoomHistoryModal({
-  room,
-  onClose,
-}) {
+export default function RoomHistoryModal({ room, onClose }) {
   const [history, setHistory] = useState([]);
   const [range, setRange] = useState("24h");
   const [loading, setLoading] = useState(false);
@@ -47,21 +44,15 @@ export default function RoomHistoryModal({
 
       try {
         const limit = RANGE_OPTIONS[range];
-
         const response = await fetch(
           `/api/history/${room.id}?limit=${limit}`
         );
 
         if (!response.ok) {
-          throw new Error(
-            `API returned HTTP ${response.status}`
-          );
+          throw new Error(`API returned HTTP ${response.status}`);
         }
 
         const data = await response.json();
-
-        // API returns newest first.
-        // Recharts is easier to read oldest -> newest.
         data.reverse();
 
         setHistory(data);
@@ -79,9 +70,7 @@ export default function RoomHistoryModal({
   const chartData = useMemo(() => {
     return history.map((reading) => ({
       ...reading,
-      timestamp: new Date(
-        reading.collected_at
-      ).getTime(),
+      timestamp: new Date(reading.collected_at).getTime(),
     }));
   }, [history]);
 
@@ -104,15 +93,9 @@ export default function RoomHistoryModal({
       >
         <div className="history-modal__header">
           <div>
-            <p className="history-modal__eyebrow">
-              JARVIS history
-            </p>
-
+            <p className="history-modal__eyebrow">JARVIS history</p>
             <h2 id="room-history-title">{room.name}</h2>
-
-            <p>
-              Temperature and humidity history
-            </p>
+            <p>Temperature and humidity history</p>
           </div>
 
           <button
@@ -126,28 +109,24 @@ export default function RoomHistoryModal({
         </div>
 
         <div className="history-range">
-          {Object.keys(RANGE_OPTIONS).map(
-            (option) => (
-              <button
-                key={option}
-                type="button"
-                className={
-                  range === option
-                    ? "history-range__button history-range__button--active"
-                    : "history-range__button"
-                }
-                onClick={() => setRange(option)}
-              >
-                {option}
-              </button>
-            )
-          )}
+          {Object.keys(RANGE_OPTIONS).map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={
+                range === option
+                  ? "history-range__button history-range__button--active"
+                  : "history-range__button"
+              }
+              onClick={() => setRange(option)}
+            >
+              {option}
+            </button>
+          ))}
         </div>
 
         {loading && (
-          <div className="history-message">
-            Loading history…
-          </div>
+          <div className="history-message">Loading history…</div>
         )}
 
         {error && (
@@ -164,43 +143,28 @@ export default function RoomHistoryModal({
                 <strong> °C</strong>
               </div>
 
-              <ResponsiveContainer
-                width="100%"
-                height={280}
-              >
+              <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
-
                   <XAxis
                     dataKey="timestamp"
                     type="number"
                     domain={["dataMin", "dataMax"]}
                     tickFormatter={(value) =>
-                      new Date(value).toLocaleTimeString(
-                        [],
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )
+                      new Date(value).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
                     }
                   />
-
-                  <YAxis
-                    domain={["auto", "auto"]}
-                    width={45}
-                  />
-
+                  <YAxis domain={["auto", "auto"]} width={45} />
                   <Tooltip
-                    labelFormatter={(value) =>
-                      formatTime(value)
-                    }
+                    labelFormatter={(value) => formatTime(value)}
                     formatter={(value) => [
                       `${value} °C`,
                       "Temperature",
                     ]}
                   />
-
                   <Line
                     type="monotone"
                     dataKey="temperature_c"
@@ -214,47 +178,32 @@ export default function RoomHistoryModal({
 
             <div className="history-chart">
               <div className="history-chart__heading">
-                <span>Humidity</span>
+                <span>Relative humidity</span>
                 <strong> % RH</strong>
               </div>
 
-              <ResponsiveContainer
-                width="100%"
-                height={280}
-              >
+              <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
-
                   <XAxis
                     dataKey="timestamp"
                     type="number"
                     domain={["dataMin", "dataMax"]}
                     tickFormatter={(value) =>
-                      new Date(value).toLocaleTimeString(
-                        [],
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )
+                      new Date(value).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
                     }
                   />
-
-                  <YAxis
-                    domain={["auto", "auto"]}
-                    width={45}
-                  />
-
+                  <YAxis domain={["auto", "auto"]} width={45} />
                   <Tooltip
-                    labelFormatter={(value) =>
-                      formatTime(value)
-                    }
+                    labelFormatter={(value) => formatTime(value)}
                     formatter={(value) => [
-                      `${value} %`,
+                      `${value} % RH`,
                       "Humidity",
                     ]}
                   />
-
                   <Line
                     type="monotone"
                     dataKey="humidity_pct"
@@ -268,9 +217,8 @@ export default function RoomHistoryModal({
 
             <div className="history-modal__footer">
               {chartData.length.toLocaleString()} readings
-              {chartData.some(
-                (reading) => reading.calibrated
-              ) && " • Calibrated"}
+              {chartData.some((reading) => reading.calibrated) &&
+                " • Calibrated"}
             </div>
           </>
         )}

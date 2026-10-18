@@ -1,12 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import HousePlan from "./components/HousePlan";
+import HistoryPage from "./components/HistoryPage";
 import RoomHistoryModal from "./components/RoomHistoryModal";
 import "./App.css";
 
 function average(values) {
-  const valid = values.filter((value) => Number.isFinite(Number(value))).map(Number);
+  const valid = values
+    .filter((value) => Number.isFinite(Number(value)))
+    .map(Number);
+
   if (!valid.length) return "—";
-  return (valid.reduce((total, value) => total + value, 0) / valid.length).toFixed(1);
+
+  return (
+    valid.reduce((total, value) => total + value, 0) / valid.length
+  ).toFixed(1);
 }
 
 function App() {
@@ -14,6 +21,7 @@ function App() {
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [page, setPage] = useState("overview");
 
   async function loadDevices() {
     try {
@@ -60,10 +68,29 @@ function App() {
           </div>
 
           <nav className="nav-links" aria-label="Main navigation">
-            <button className="nav-link nav-link--active">Overview</button>
-            <button className="nav-link">Rooms</button>
-            <button className="nav-link">History</button>
-            <button className="nav-link">Devices</button>
+            <button
+              type="button"
+              className={
+                page === "overview"
+                  ? "nav-link nav-link--active"
+                  : "nav-link"
+              }
+              onClick={() => setPage("overview")}
+            >
+              Overview
+            </button>
+
+            <button
+              type="button"
+              className={
+                page === "history"
+                  ? "nav-link nav-link--active"
+                  : "nav-link"
+              }
+              onClick={() => setPage("history")}
+            >
+              History
+            </button>
           </nav>
 
           <div className={`system-pill ${error ? "system-pill--error" : ""}`}>
@@ -74,64 +101,82 @@ function App() {
       </header>
 
       <main className="page">
-        <div className="page-heading">
-          <div>
-            <p className="page-heading__eyebrow">Home automation</p>
-            <h1>Home overview</h1>
-            <p>Live room conditions and JARVIS node status.</p>
-          </div>
+        {page === "overview" && (
+          <>
+            <div className="page-heading">
+              <div>
+                <p className="page-heading__eyebrow">Home automation</p>
+                <h1>Home overview</h1>
+                <p>Live room conditions and JARVIS node status.</p>
+              </div>
 
-          <div className="last-updated">
-            Last refreshed{" "}
-            {lastUpdated
-              ? lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
-              : "—"}
-          </div>
-        </div>
+              <div className="last-updated">
+                Last refreshed{" "}
+                {lastUpdated
+                  ? lastUpdated.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })
+                  : "—"}
+              </div>
+            </div>
 
-        {error && (
-          <div className="error-banner">
-            <strong>Unable to contact the JARVIS API.</strong>
-            <span>{error}</span>
-          </div>
+            {error && (
+              <div className="error-banner">
+                <strong>Unable to contact the JARVIS API.</strong>
+                <span>{error}</span>
+              </div>
+            )}
+
+            <section className="metric-grid" aria-label="Home summary">
+              <div className="summary-card">
+                <span>Nodes online</span>
+                <strong>
+                  {stats.online}
+                  <small> / {stats.total || "—"}</small>
+                </strong>
+              </div>
+
+              <div className="summary-card">
+                <span>Average temperature</span>
+                <strong>
+                  {stats.avgTemp}
+                  <small>°C</small>
+                </strong>
+              </div>
+
+              <div className="summary-card">
+                <span>Average humidity</span>
+                <strong>
+                  {stats.avgHumidity}
+                  <small>%</small>
+                </strong>
+              </div>
+
+              <div className="summary-card">
+                <span>Collector interval</span>
+                <strong>
+                  60<small>s</small>
+                </strong>
+              </div>
+            </section>
+
+            <HousePlan
+              devices={devices}
+              onRoomClick={(id, name) => {
+                setSelectedRoom({ id, name });
+              }}
+            />
+
+            <RoomHistoryModal
+              room={selectedRoom}
+              onClose={() => setSelectedRoom(null)}
+            />
+          </>
         )}
 
-        <section className="metric-grid" aria-label="Home summary">
-          <div className="summary-card">
-            <span>Nodes online</span>
-            <strong>{stats.online}<small> / {stats.total || "—"}</small></strong>
-          </div>
-
-          <div className="summary-card">
-            <span>Average temperature</span>
-            <strong>{stats.avgTemp}<small>°C</small></strong>
-          </div>
-
-          <div className="summary-card">
-            <span>Average humidity</span>
-            <strong>{stats.avgHumidity}<small>%</small></strong>
-          </div>
-
-          <div className="summary-card">
-            <span>Collector interval</span>
-            <strong>60<small>s</small></strong>
-          </div>
-        </section>
-
-        <HousePlan
-          devices={devices}
-          onRoomClick={(id, name) => {
-            setSelectedRoom({
-              id,
-              name,
-            });
-          }}
-        />
-
-        <RoomHistoryModal
-          room={selectedRoom}
-          onClose={() => setSelectedRoom(null)}
-        />
+        {page === "history" && <HistoryPage />}
       </main>
     </div>
   );

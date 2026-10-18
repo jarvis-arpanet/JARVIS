@@ -212,10 +212,6 @@ textarea {
 }
 
 @media (max-width: 900px) {
-  .nav-links {
-    display: none;
-  }
-
   .metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -230,6 +226,18 @@ textarea {
   .top-nav__inner,
   .page {
     width: min(100% - 24px, 1400px);
+  }
+
+  .top-nav__inner {
+    gap: 12px;
+  }
+
+  .nav-links {
+    gap: 2px;
+  }
+
+  .nav-link {
+    padding: 8px 7px;
   }
 
   .system-pill {

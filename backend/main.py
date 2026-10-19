@@ -40,36 +40,42 @@ PICO_NODES = {
 
 SENSOR_CALIBRATION = {
     "arthurs_room": {
-        "temperature": -0.4,
-        "humidity": 2.6,
-    },
-    "bar": {
-        "temperature": 0.0,
+        "temperature": 0.5,
         "humidity": -1.2,
     },
-    "front_room": {
-        "temperature": 0.8,
+
+    "bar": {
+        "temperature": -0.7,
         "humidity": 0.0,
     },
-    "gym": {
-        "temperature": 0.8,
-        "humidity": -2.7,
+
+    "front_room": {
+        "temperature": 0.6,
+        "humidity": 0.1,
     },
+
     "kitchen": {
-        "temperature": 0.2,
-        "humidity": -0.5,
+        "temperature": -0.3,
+        "humidity": 0.3,
     },
+
+    "lilys_room": {
+        "temperature": 0.5,
+        "humidity": 0.0,
+    },
+
+    "main_bedroom": {
+        "temperature": 0.0,
+        "humidity": -0.9,
+    },
+
     "main_room": {
-        "temperature": -1.8,
-        "humidity": 6.1,
+        "temperature": -1.3,
+        "humidity": 3.0,
     },
 
-    # Deliberately left uncalibrated until more comparison data
-    # is collected / the sensor is replaced if necessary:
-    # "lilys_room"
-    # "main_bedroom"
+    # gym currently not recalibrated
 }
-
 
 def apply_calibration(device, temperature, humidity):
     calibration = SENSOR_CALIBRATION.get(device)

@@ -1,27 +1,33 @@
-# JARVIS History Range Update
+# JARVIS History Alignment Fix
 
-Files included:
+This fixes the fragmented/dotted history lines introduced by the previous update.
 
-- `frontend/src/components/HistoryPage.jsx`
-- `frontend/src/components/HistoryPage.css`
-- `backend/apply_history_range_update.py`
+## Cause
 
-The frontend adds `1h`, `2h`, `4h`, `8h`, `12h`, `24h`, `3d`, `1w`, and `1mo`.
-It fixes the X-axis so the whole selected period is shown and explicitly breaks lines across missing-data gaps.
+Each Pico is polled a few seconds apart. The previous frontend merged readings
+using their exact timestamps while `connectNulls={false}` was enabled.
 
-The backend is supplied as a one-time updater rather than a replacement `main.py`, so your existing calibration settings and other backend code are preserved.
+That meant one room might have a point at 20:01:03 and another at 20:01:07.
+Those became separate chart rows, so every room appeared to have missing data
+between most samples.
 
-After copying/pulling the files to the Pi, from `~/JARVIS` run:
+## Fix
 
-```bash
-python backend/apply_history_range_update.py
-python -m py_compile backend/main.py
-```
+All readings are now snapped onto the common graph bucket:
 
-The updater creates this backup first:
+- 1 minute through 24h
+- 3 minutes for 3d
+- 5 minutes for 1w
+- 15 minutes for 1mo
 
-`backend/main.py.before-history-range-update`
+Real long gaps still create a break in the line.
 
-Then restart the backend and frontend normally.
+## Copy
 
-No `npm install` is required.
+Replace:
+
+`frontend/src/components/HistoryPage.jsx`
+
+No backend or CSS change is needed for this correction.
+
+No npm install is required.

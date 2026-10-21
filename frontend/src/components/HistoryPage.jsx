@@ -56,9 +56,15 @@ const ROOMS = {
 };
 
 const RANGE_OPTIONS = {
-  "6h": 360,
-  "24h": 1440,
-  "3d": 4320,
+  "1h": { hours: 1, bucketMinutes: 1 },
+  "2h": { hours: 2, bucketMinutes: 1 },
+  "4h": { hours: 4, bucketMinutes: 1 },
+  "8h": { hours: 8, bucketMinutes: 1 },
+  "12h": { hours: 12, bucketMinutes: 1 },
+  "24h": { hours: 24, bucketMinutes: 1 },
+  "3d": { hours: 72, bucketMinutes: 3 },
+  "1w": { hours: 168, bucketMinutes: 5 },
+  "1mo": { hours: 720, bucketMinutes: 15 },
 };
 
 function formatTime(timestamp) {
@@ -78,6 +84,9 @@ export default function HistoryPage() {
   const [history, setHistory] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [windowEnd, setWindowEnd] = useState(Date.now());
+
+  const rangeConfig = RANGE_OPTIONS[range];
 
   useEffect(() => {
     async function loadHistory() {
@@ -85,12 +94,18 @@ export default function HistoryPage() {
       setError(null);
 
       try {
-        const limit = RANGE_OPTIONS[range];
+        const requestEnd = Date.now();
+        setWindowEnd(requestEnd);
 
         const responses = await Promise.all(
           roomIds.map(async (roomId) => {
+            const params = new URLSearchParams({
+              hours: String(rangeConfig.hours),
+              bucket_minutes: String(rangeConfig.bucketMinutes),
+            });
+
             const response = await fetch(
-              `/api/history/${roomId}?limit=${limit}`
+              `/api/history/${roomId}?${params.toString()}`
             );
 
             if (!response.ok) {
@@ -101,10 +116,7 @@ export default function HistoryPage() {
 
             const data = await response.json();
 
-            return [
-              roomId,
-              data.reverse(),
-            ];
+            return [roomId, data];
           })
         );
 
@@ -136,44 +148,60 @@ export default function HistoryPage() {
     });
   }
 
+  const windowStart =
+    windowEnd - rangeConfig.hours * 60 * 60 * 1000;
+
   const chartData = useMemo(() => {
     const buckets = new Map();
 
+    const ensureBucket = (timestamp) => {
+      if (!buckets.has(timestamp)) {
+        buckets.set(timestamp, { timestamp });
+      }
+      return buckets.get(timestamp);
+    };
+
     for (const roomId of roomIds) {
-      const readings = history[roomId] ?? [];
+      const readings = [...(history[roomId] ?? [])].sort(
+        (a, b) => new Date(a.collected_at) - new Date(b.collected_at)
+      );
+
+      let previousTimestamp = null;
 
       for (const reading of readings) {
-        const date = new Date(
-          reading.collected_at
-        );
+        const timestamp = new Date(reading.collected_at).getTime();
+        if (!Number.isFinite(timestamp)) continue;
 
-        date.setSeconds(0, 0);
+        if (previousTimestamp !== null) {
+          const expectedGapMs =
+            rangeConfig.bucketMinutes * 60 * 1000;
+          const breakThresholdMs = expectedGapMs * 2.5;
 
-        const timestamp = date.getTime();
-
-        if (!buckets.has(timestamp)) {
-          buckets.set(timestamp, {
-            timestamp,
-          });
+          if (timestamp - previousTimestamp > breakThresholdMs) {
+            const breakTimestamp = Math.round(
+              (previousTimestamp + timestamp) / 2
+            );
+            const breakRow = ensureBucket(breakTimestamp);
+            breakRow[`${roomId}_temp`] = null;
+            breakRow[`${roomId}_humidity`] = null;
+          }
         }
 
-        const row = buckets.get(timestamp);
-
-        row[`${roomId}_temp`] =
-          reading.temperature_c;
-
-        row[`${roomId}_humidity`] =
-          reading.humidity_pct;
+        const row = ensureBucket(timestamp);
+        row[`${roomId}_temp`] = reading.temperature_c;
+        row[`${roomId}_humidity`] = reading.humidity_pct;
+        previousTimestamp = timestamp;
       }
     }
 
-    return Array.from(
-      buckets.values()
-    ).sort(
-      (a, b) =>
-        a.timestamp - b.timestamp
+    // Force the X axis to show the whole requested range.
+    ensureBucket(windowStart);
+    ensureBucket(windowEnd);
+
+    return Array.from(buckets.values()).sort(
+      (a, b) => a.timestamp - b.timestamp
     );
-  }, [history]);
+  }, [history, rangeConfig.bucketMinutes, windowStart, windowEnd]);
 
   return (
     <div className="history-page">
@@ -318,21 +346,28 @@ export default function HistoryPage() {
                 <XAxis
                   dataKey="timestamp"
                   type="number"
-                  domain={[
-                    "dataMin",
-                    "dataMax",
-                  ]}
-                  tickFormatter={(value) =>
-                    new Date(
-                      value
-                    ).toLocaleTimeString(
-                      [],
-                      {
+                  scale="time"
+                  domain={[windowStart, windowEnd]}
+                  minTickGap={45}
+                  tickFormatter={(value) => {
+                    const date = new Date(value);
+                    if (rangeConfig.hours <= 24) {
+                      return date.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
-                      }
-                    )
-                  }
+                      });
+                    }
+                    if (rangeConfig.hours <= 168) {
+                      return date.toLocaleString([], {
+                        weekday: "short",
+                        hour: "2-digit",
+                      });
+                    }
+                    return date.toLocaleDateString([], {
+                      day: "2-digit",
+                      month: "short",
+                    });
+                  }}
                 />
 
                 <YAxis
@@ -400,21 +435,28 @@ export default function HistoryPage() {
                 <XAxis
                   dataKey="timestamp"
                   type="number"
-                  domain={[
-                    "dataMin",
-                    "dataMax",
-                  ]}
-                  tickFormatter={(value) =>
-                    new Date(
-                      value
-                    ).toLocaleTimeString(
-                      [],
-                      {
+                  scale="time"
+                  domain={[windowStart, windowEnd]}
+                  minTickGap={45}
+                  tickFormatter={(value) => {
+                    const date = new Date(value);
+                    if (rangeConfig.hours <= 24) {
+                      return date.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
-                      }
-                    )
-                  }
+                      });
+                    }
+                    if (rangeConfig.hours <= 168) {
+                      return date.toLocaleString([], {
+                        weekday: "short",
+                        hour: "2-digit",
+                      });
+                    }
+                    return date.toLocaleDateString([], {
+                      day: "2-digit",
+                      month: "short",
+                    });
+                  }}
                 />
 
                 <YAxis

@@ -277,3 +277,22 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* History range buttons: allow the extended range set to wrap neatly. */
+.history-range {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 560px;
+}
+
+@media (max-width: 1100px) {
+  .history-page__heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .history-range {
+    justify-content: flex-start;
+    max-width: none;
+  }
+}
